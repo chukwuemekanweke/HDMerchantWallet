@@ -8,4 +8,4 @@ This contract wallet implementation is meant for users/businesses who desire to 
 # Use Cases
 1) B2B web 2.0 software
 2) Chain of stores looking for a transperent means of managing the financials of their franchises 
-3) 
+
