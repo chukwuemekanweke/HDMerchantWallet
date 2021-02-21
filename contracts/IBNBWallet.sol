@@ -3,18 +3,18 @@ pragma solidity ^0.6.0;
 /**
  * @dev Interface of the EtherWallet
  */
-interface IEtherWallet {
+interface IBNBWallet {
   
     /**
-     * @dev Transfers all ethers to contract owner;
+     * @dev Transfers all bnb to contract owner;
      */
-    function sweepEthers() external returns(uint,address);
+    function sweepBNB() external returns(uint,address);
 
 
      /**
-     * @dev Returns the ether balance for this contract
+     * @dev Returns the bnb balance for this contract
      */
-    function etherBalanceOf() external view returns (uint);
+    function BNBBalanceOf() external view returns (uint);
     
     
      /**

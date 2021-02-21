@@ -72,10 +72,9 @@ module.exports = {
     bsc_testnet : {
       provider: () => new HDWalletProvider(`${process.env.METAMASK_KEY}`, 'https://data-seed-prebsc-2-s3.binance.org:8545/'),
       network_id: 97,       // binance's id
-      gas: 6500000,        // binance has a lower block limit than mainnet
-      confirmations: 1,    // # of confs to wait between deployments. (default: 0)
+      gas: 5500000,        // binance has a lower block limit than mainnet
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      gasPrice: "1000000000",
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     }
     // Useful for private networks
@@ -94,11 +93,11 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
-      docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
+      version: "0.6.4",    // Fetch exact version from solc-bin (default: truffle's version)
+      docker: false,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {
-         enabled: false,
+         enabled: true,
          runs: 200
        },
        evmVersion: "byzantium"

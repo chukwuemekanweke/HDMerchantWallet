@@ -1,18 +1,18 @@
 pragma solidity ^0.6.0;
 
 /**
- * @dev Interface of the ERC20Wallet
+ * @dev Interface of the bep20wallet
  */
-interface IERC20Wallet {
+interface IBEP20Wallet {
     /**
      * @dev Transfers all tokens to contract owner;
      */
     function sweepTokens() external returns(uint,address,address);
 
     /**
-     * @dev Transfers all ethers to contract owner;
+     * @dev Transfers all bnb to contract owner;
      */
-    function sweepEthers() external returns(uint,address);
+    function sweepBNB() external returns(uint,address);
     
      /**
      * @dev Returns the token balance for this contract
@@ -20,9 +20,9 @@ interface IERC20Wallet {
     function tokenBalanceOf()  external view returns (uint);
     
      /**
-     * @dev Returns the ether balance for this contract
+     * @dev Returns the bnb balance for this contract
      */
-    function etherBalanceOf()  external view returns (uint);
+    function BNBBalanceOf()  external view returns (uint);
     
     function tokenDecimals() external view  returns (uint8);
 

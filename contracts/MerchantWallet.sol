@@ -2,11 +2,9 @@ pragma solidity ^0.6.4;
 pragma experimental ABIEncoderV2;
 
 import "./Ownable.sol";
-//import "./IERC20Wallet.sol";
-//import "./ERC20Wallet.sol";
 
-import "./IEtherWallet.sol";
-import "./EtherWallet.sol";
+import "./IBNBWallet.sol";
+import "./BNBWallet.sol";
 
 import "./IERC20.sol";
 
@@ -16,7 +14,7 @@ contract MerchantWallet is Ownable {
 
    
     //A map of a user's ether wallets
-    mapping(string => address[]) public etherContractWallets;
+    mapping(string => address[]) public bnbContractWallets;
     mapping(address => string) public contractWalletOwners;
 
 
@@ -41,7 +39,7 @@ contract MerchantWallet is Ownable {
         string clientId
     );
     
-    event EtherSweepEvent ( 
+    event BNBSweepEvent ( 
         uint256 amount,
         address destinationAddress,
         address merchantWalletAddress,
@@ -53,63 +51,63 @@ contract MerchantWallet is Ownable {
 
     constructor(address _walletAdmin,address payable _owner) public {
         owner = _owner;
-        walletAdmin = _walletAdmin;
+        WalletAdmin = _walletAdmin;
     }
 
-    function createEtherWallet(string calldata clientId) onlyOwner external returns (bool) {
-        require(etherContractWallets[clientId].length == 0, "MerchantWallet: Ether wallet exists");
+    function createBNBWallet(string calldata clientId) onlyOwner external returns (bool) {
+        require(bnbContractWallets[clientId].length == 0, "MerchantWallet: Ether wallet exists");
         createWallet(clientId);
         clients.push(clientId);
         return true;
     }
 
-    function addNewEtherWallet(string calldata clientId) onlyOwner external returns (bool) {
+    function addNewBNBWallet(string calldata clientId) onlyOwner external returns (bool) {
         createWallet(clientId);
         return true;
     }
     
     
     function createWallet(string memory clientId) internal {
-        EtherWallet etherWallet = new EtherWallet(owner,walletAdmin);
-        etherContractWallets[clientId].push(address(etherWallet));
-        contractWalletOwners[address(etherWallet)] = clientId;
-        emit WalletCreationEvent(address(etherWallet),address(this), clientId);
+        BNBWallet bnbWallet = new BNBWallet(owner,WalletAdmin);
+        bnbContractWallets[clientId].push(address(bnbWallet));
+        contractWalletOwners[address(bnbWallet)] = clientId;
+        emit WalletCreationEvent(address(bnbWallet),address(this), clientId);
     }
     
     
-     function sweepEthers(string calldata clientId)onlyOwner external returns (bool){
+     function sweepBNB(string calldata clientId)onlyOwner external returns (bool){
          
-        require(etherContractWallets[clientId].length > 0, "MerchantWallet: Ether wallet does not exist");
-         address[] memory walletContractAddresses = etherContractWallets[clientId];
+        require(bnbContractWallets[clientId].length > 0, "MerchantWallet: bnb wallet does not exist");
+         address[] memory walletContractAddresses = bnbContractWallets[clientId];
         for(uint i = 0; i < walletContractAddresses.length; ++i ){
            
             address walletContractAddress =  walletContractAddresses[i];
-            IEtherWallet wallet = IEtherWallet(walletContractAddress);
+            IBNBWallet wallet = IBNBWallet(walletContractAddress);
             
-            uint etherBalance = wallet.etherBalanceOf();
-            if(etherBalance>0)
+            uint bnbBalance = wallet.BNBBalanceOf();
+            if(bnbBalance>0)
             {
-                (uint amount, address destinationAddress) = wallet.sweepEthers();
-                emit EtherSweepEvent(amount, destinationAddress, address(this),walletContractAddress,clientId);
+                (uint amount, address destinationAddress) = wallet.sweepBNB();
+                emit BNBSweepEvent(amount, destinationAddress, address(this),walletContractAddress,clientId);
             }
         }
         return true;
 
     }
     
-    function sweepEthers(address walletContractAddress)onlyOwner external returns(bool){
+    function sweepBNB(address walletContractAddress)onlyOwner external returns(bool){
         string memory clientId = contractWalletOwners[walletContractAddress];
         require( keccak256( bytes(clientId)) != keccak256(bytes("")),"MerchantWallet: Contract is not a merchant wallet ether wallet contract ");
-        IEtherWallet wallet = IEtherWallet(walletContractAddress);
-        (uint amount, address destinationAddress) = wallet.sweepEthers();
-        emit EtherSweepEvent(amount, destinationAddress, address(this),walletContractAddress,clientId);
+         IBNBWallet wallet = IBNBWallet(walletContractAddress);
+        (uint amount, address destinationAddress) = wallet.sweepBNB();
+        emit BNBSweepEvent(amount, destinationAddress, address(this),walletContractAddress,clientId);
     }
     
     
     function sweepTokens(address tokenAddress,  string calldata clientId)onlyOwner external returns (bool){
          
-        require(etherContractWallets[clientId].length > 0, "MerchantWallet: Ether wallet does not exist");
-         address[] memory walletContractAddresses = etherContractWallets[clientId];
+        require(bnbContractWallets[clientId].length > 0, "MerchantWallet: Ether wallet does not exist");
+         address[] memory walletContractAddresses = bnbContractWallets[clientId];
          
          address walletMerchantContractAddress = address(this);
          string memory _clientId = clientId;
@@ -117,7 +115,7 @@ contract MerchantWallet is Ownable {
         for(uint i = 0; i < walletContractAddresses.length; ++i ){
            
             address walletContractAddress =  walletContractAddresses[i];
-            IEtherWallet wallet = IEtherWallet(walletContractAddress);
+           IBNBWallet wallet = IBNBWallet(walletContractAddress);
             
             uint tokenBalance = wallet.tokenBalanceOf(tokenAddress);
             if(tokenBalance>0)
@@ -135,7 +133,7 @@ contract MerchantWallet is Ownable {
         string memory clientId = contractWalletOwners[walletContractAddress];
         require( keccak256( bytes(clientId)) != keccak256(bytes("")),"MerchantWallet: Contract is not a merchant wallet ether wallet contract ");
         
-        IEtherWallet wallet = IEtherWallet(walletContractAddress);
+        IBNBWallet wallet = IBNBWallet(walletContractAddress);
         (uint amount,address _tokenAddress, address destinationAddress) = wallet.sweepTokens(tokenAddress);
         emit TokenSweepEvent(amount,_tokenAddress, destinationAddress, address(this),walletContractAddress,clientId);
 
@@ -143,29 +141,29 @@ contract MerchantWallet is Ownable {
     
     
      function tokenBalanceOf(address walletContractAddress,address tokenAddress) external view  returns (uint amount){
-        IEtherWallet wallet = IEtherWallet(walletContractAddress);
+        IBNBWallet wallet = IBNBWallet(walletContractAddress);
         return wallet.tokenBalanceOf(tokenAddress);
     }
     
     function tokenDecimals(address walletContractAddress,address tokenAddress) external view  returns (uint8 decimals){
-        IEtherWallet wallet = IEtherWallet(walletContractAddress);
+        IBNBWallet wallet = IBNBWallet(walletContractAddress);
         return wallet.tokenDecimals(tokenAddress);
     }
     
-    function etherBalanceOf(address walletContractAddress) external view  returns (uint amount){
-       IEtherWallet wallet = IEtherWallet(walletContractAddress);
-       return wallet.etherBalanceOf();
+    function BNBBalanceOf(address walletContractAddress) external view  returns (uint amount){
+       IBNBWallet wallet = IBNBWallet(walletContractAddress);
+       return wallet.BNBBalanceOf();
     }
 
     function getClients() public view returns (string[] memory){
         return clients;
     }
     
-    function getClientEtherWalletAddress(string calldata clientId, uint index) external view returns(address){
-         require(etherContractWallets[clientId].length > 0, "MerchantWallet: Ether wallet does not exist");
-         require(etherContractWallets[clientId].length > index, "MerchantWallet: User does not have this many wallets");
+    function getClientBNBWalletAddress(string calldata clientId, uint index) external view returns(address){
+         require(bnbContractWallets[clientId].length > 0, "MerchantWallet: Ether wallet does not exist");
+         require(bnbContractWallets[clientId].length > index, "MerchantWallet: User does not have this many wallets");
          address walletContractAddress;
-         address[] memory walletContractAddresses = etherContractWallets[clientId];
+         address[] memory walletContractAddresses = bnbContractWallets[clientId];
            for(uint i = 0; i < walletContractAddresses.length; ++i ){
            
            if(i==index)
@@ -180,7 +178,7 @@ contract MerchantWallet is Ownable {
     
      function getClientWalletCount(string calldata clientId) external view returns(uint count){
         
-         address[] memory walletContractAddresses = etherContractWallets[clientId];
+         address[] memory walletContractAddresses = bnbContractWallets[clientId];
          return walletContractAddresses.length;  
     }
     

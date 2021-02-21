@@ -7,13 +7,13 @@ pragma experimental ABIEncoderV2;
 interface IMerchantWallet {
   
    
-   function createEtherWallet(string calldata clientId) external returns (bool);
+   function createBNBWallet(string calldata clientId) external returns (bool);
    
-   function AddNewEtherWallet(string calldata clientId) external returns (bool);
+   function AddNewBNBWallet(string calldata clientId) external returns (bool);
    
-   function sweepEthers(string calldata clientId) external returns (bool);
+   function sweepBNB(string calldata clientId) external returns (bool);
   
-   function sweepEthers(address walletContractAddress) external returns(bool);
+   function sweepBNB(address walletContractAddress) external returns(bool);
    
    function sweepTokens(address tokenAddress,  string calldata clientId) external returns (bool);
    
@@ -23,7 +23,7 @@ interface IMerchantWallet {
    
    function tokenDecimals(address walletContractAddress,address tokenAddress) external view  returns (uint8);
    
-   function etherBalanceOf(address walletContractAddress) external view  returns (uint);
+   function BNBBalanceOf(address walletContractAddress) external view  returns (uint);
    
    
   

@@ -9,7 +9,7 @@ pragma solidity ^0.6.4;
  */
 contract Ownable {
   address payable public owner;
-  address public switchWalletAdmin;
+  address public WalletAdmin;
 
 
 
@@ -19,7 +19,7 @@ contract Ownable {
   }
   
   modifier onlySwitchWalletOrOwner() {
-    if (msg.sender == owner || msg.sender == switchWalletAdmin)
+    if (msg.sender == owner || msg.sender == WalletAdmin)
       _;
   }
   

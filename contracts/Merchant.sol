@@ -2,7 +2,7 @@ pragma solidity ^0.6.4;
 
 import "./Ownable.sol";
 import "./MerchantWallet.sol";
-import "./MerchantWallet.sol";
+import "./IMerchantWallet.sol";
 
 
 contract Merchant is Ownable {
@@ -24,13 +24,13 @@ contract Merchant is Ownable {
 
     constructor() public {
         owner = msg.sender;
-        switchWalletAdmin = msg.sender;
+        WalletAdmin = msg.sender;
     }
     
     
     function createMerchantWallet(string calldata clientId,address payable  merchantAddress) external onlyOwner returns(bool) {
-        require( merchantWallets[clientId]==address(0) , "Switch Wallet Merchant: Merchant Wallet Has Already Been Created");
-        SwitchWalletMerchantWallet merchantWallet = new SwitchWalletMerchantWallet(switchWalletAdmin,merchantAddress);
+        require( merchantWallets[clientId]==address(0) , " Wallet Merchant: Merchant Wallet Has Already Been Created");
+        MerchantWallet merchantWallet = new MerchantWallet(WalletAdmin,merchantAddress);
         merchantWallets[clientId] = address(merchantWallet);
         emit CreateMerchantWalletEvent(clientId,merchantAddress,address(merchantWallet));
         return true;

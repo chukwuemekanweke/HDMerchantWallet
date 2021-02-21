@@ -3,14 +3,14 @@ pragma solidity ^0.6.4;
 import "./Ownable.sol";
 import "./IERC20.sol";
 
-contract ERC20Wallet is Ownable {
+contract BEP20Wallet is Ownable {
   
     IERC20 token;
 
-    constructor (IERC20 _token, address payable _owner, address _switchWalletAdmin) public {
+    constructor (IERC20 _token, address payable _owner, address _WalletAdmin) public {
         owner = _owner;
         token = _token;
-        switchWalletAdmin = _switchWalletAdmin;
+        WalletAdmin = _WalletAdmin;
     }
     
     /*
@@ -30,11 +30,11 @@ contract ERC20Wallet is Ownable {
        return (tokenBalance,address(this),owner);
     }
     
-    function sweepEthers() public returns (uint,address){
-       uint etherBalance =  address(this).balance;
-       require(etherBalance != 0, "ERC20Wallet: ether balance cannot be zero");
-       owner.transfer(etherBalance);
-       return (etherBalance,owner);
+    function sweepBNB() public returns (uint,address){
+       uint BNBBalance =  address(this).balance;
+       require(BNBBalance != 0, "ERC20Wallet: ether balance cannot be zero");
+       owner.transfer(BNBBalance);
+       return (BNBBalance,owner);
     }
     
     function tokenBalanceOf() public view  returns (uint amount){
@@ -45,7 +45,7 @@ contract ERC20Wallet is Ownable {
         return token.decimals();        
     }
     
-    function etherBalanceOf() public view  returns (uint amount){
+    function BNBBalanceOf() public view  returns (uint amount){
         return address(this).balance;
     }
 }

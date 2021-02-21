@@ -3,7 +3,7 @@ pragma solidity ^0.6.4;
 import "./Ownable.sol";
 import "./IERC20.sol";
 
-contract EtherWallet is Ownable {
+contract BNBWallet is Ownable {
 
     event WalletEvent ( 
         address addr,
@@ -13,26 +13,22 @@ contract EtherWallet is Ownable {
 
 
 
-    constructor (address payable _owner, address _switchWalletAdmin) public {
+    constructor (address payable _owner, address _WalletAdmin) public {
         owner = _owner;
-        switchWalletAdmin = _switchWalletAdmin;
+        WalletAdmin = _WalletAdmin;
 
     }
-    
-    receive() external payable { 
-
-
-     }
+   
 
     
-    function sweepEthers() public returns (uint,address){
-       uint etherBalance =  address(this).balance;
-       require(etherBalance != 0, "ERC20Wallet: ether balance cannot be zero");
-       owner.transfer(etherBalance);
-       return (etherBalance,owner);
+    function sweepBNB() public returns (uint,address){
+       uint BNBBalance =  address(this).balance;
+       require(BNBBalance != 0, "ERC20Wallet: ether balance cannot be zero");
+       owner.transfer(BNBBalance);
+       return (BNBBalance,owner);
     }
     
-    function etherBalanceOf() public view  returns (uint amount){
+    function BNBBalanceOf() public view  returns (uint amount){
         return address(this).balance;
     }
     
