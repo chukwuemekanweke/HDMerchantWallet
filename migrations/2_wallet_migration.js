@@ -5,5 +5,5 @@ const owner = "0x20AB4EdaCeffD990CB4DDbd38A67Be9602471458"
 
 module.exports = function (deployer) {
   deployer.deploy(Merchant);
-  deployer.deploy(MerchantWallet, owner)
+  deployer.deploy(MerchantWallet, owner, owner)
 };
